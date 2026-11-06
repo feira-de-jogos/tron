@@ -15,6 +15,13 @@
 | **EMQX** | `wss://broker.emqx.io:8883` | Público | Alta performance |
 | **Local (Docker)** | `ws://localhost:9001` | Local | Para desenvolvimento |
 
+
+### 🐛 Nota: Correção de Propriedades
+
+Se vir erro `"Unknown property, reconnect"`:
+- ✅ Já foi corrigido! (Recarregue a página com Ctrl+F5)
+- Paho MQTT v1.0.1 não suporta `reconnect` automático
+- Ver: `PAHO-MQTT-PROPERTIES.md` para detalhes
 ### ⚠️ Importante: MQTT sobre WebSocket vs WebSocket Puro
 
 - **O servidor WebSocket NÃO usa WebSocket puro**
