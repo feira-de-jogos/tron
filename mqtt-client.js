@@ -266,13 +266,23 @@ const MQTTClient = {
       return;
     }
     
-    const message = {
-      timestamp: Date.now(),
-      clientId: this.clientId,
-      ...gameState
-    };
+    // Validar que gameState é um objeto válido
+    if (!gameState || typeof gameState !== "object") {
+      console.warn("[MQTT] ❌ Estado do jogo inválido para publicação:", gameState);
+      return;
+    }
     
-    this._publish(this.gameTopic, message);
+    try {
+      const message = {
+        timestamp: Date.now(),
+        clientId: this.clientId,
+        ...gameState
+      };
+      
+      this._publish(this.gameTopic, message);
+    } catch (e) {
+      console.error("[MQTT] ❌ Erro ao publicar estado do jogo:", e);
+    }
   },
   
   /**
@@ -317,9 +327,21 @@ const MQTTClient = {
       return;
     }
     
-    const payload = JSON.stringify(data);
-    
     try {
+      // Validar payload
+      const payload = JSON.stringify(data);
+      
+      if (!payload || payload.length === 0) {
+        console.warn("[MQTT] ❌ Payload vazio");
+        return;
+      }
+      
+      // Limitar tamanho do payload (max 128KB para MQTT)
+      if (payload.length > 128000) {
+        console.warn("[MQTT] ❌ Payload muito grande:", payload.length, "bytes");
+        return;
+      }
+      
       if (this.client && this.client.send) {
         const message = new Paho.MQTT.Message(payload);
         message.destinationName = topic;
@@ -327,12 +349,12 @@ const MQTTClient = {
         message.retained = false;
         
         this.client.send(message);
-        console.log(`[MQTT] ✓ Publicado em ${topic}`);
+        console.log(`[MQTT] ✓ Publicado em ${topic} (${payload.length} bytes)`);
       } else {
         console.error("[MQTT] ❌ Cliente MQTT não disponível para publicação");
       }
     } catch (e) {
-      console.error("[MQTT] ❌ Erro ao publicar:", e);
+      console.error("[MQTT] ❌ Erro ao publicar:", e.message || e);
     }
   },
   

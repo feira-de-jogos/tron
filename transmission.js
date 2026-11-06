@@ -8,7 +8,7 @@ const GameTransmission = {
   enabled: false,
   isSpectator: false,
   isHost: false,
-  updateInterval: 50, // ms entre atualizações
+  updateInterval: 200, // ms entre atualizações (foi 50ms, muito agressivo)
   updateTimer: null,
   lastGameState: null,
   gameStateProvider: null, // Função que fornece o estado do jogo
@@ -98,14 +98,26 @@ const GameTransmission = {
    * Transmite o estado atual do jogo
    */
   _transmitGameState() {
-    const gameState = this._captureGameState();
+    // Verificar se ainda está conectado
+    if (!MQTTClient.isConnected) {
+      return;
+    }
     
-    if (!gameState) return;
-    
-    // Detectar mudanças para otimizar transmissão
-    if (JSON.stringify(gameState) !== JSON.stringify(this.lastGameState)) {
-      MQTTClient.publishGameState(gameState);
-      this.lastGameState = gameState;
+    try {
+      const gameState = this._captureGameState();
+      
+      if (!gameState) return;
+      
+      // Detectar mudanças para otimizar transmissão
+      const currentStateJson = JSON.stringify(gameState);
+      const lastStateJson = JSON.stringify(this.lastGameState);
+      
+      if (currentStateJson !== lastStateJson) {
+        MQTTClient.publishGameState(gameState);
+        this.lastGameState = gameState;
+      }
+    } catch (e) {
+      console.error("[GameTransmission] Erro ao transmitir estado:", e);
     }
   },
   
