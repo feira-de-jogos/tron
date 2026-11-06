@@ -9,7 +9,7 @@
 const MQTTClient = {
   client: null,
   isConnected: false,
-  brokerUrl: "wss://feira-de-jogos.dev.br/mqtt", // Broker principal (MQTT sobre WebSocket seguro)
+  brokerUrl: "wss://mqtt.feira-de-jogos.dev.br/mqtt", // Broker principal (MQTT sobre WebSocket seguro)
   clientId: `tron_${Math.random().toString(36).substr(2, 9)}`,
   gameTopic: "tron/game/state",
   spectatorsTopic: "tron/spectators",
@@ -47,19 +47,36 @@ const MQTTClient = {
    */
   _initPaho() {
     try {
-      // Extrair host e porta da URL
-      let host = this.brokerUrl.replace("ws://", "").replace("wss://", "");
-      let port = 9001; // Porta padrão
+      // Extrair host, porta e caminho da URL (ex: wss://mqtt.feira-de-jogos.dev.br/mqtt)
+      let url = this.brokerUrl;
+      let isSecure = url.startsWith("wss://");
       
-      // Se houver porta na URL, extrair
+      // Remove protocolo
+      let hostPath = url.replace("wss://", "").replace("ws://", "");
+      
+      // Separar host+porta do caminho
+      let host, port, path = "/mqtt"; // caminho padrão
+      
+      if (hostPath.includes("/")) {
+        const parts = hostPath.split("/");
+        host = parts[0];
+        path = "/" + parts.slice(1).join("/");
+      } else {
+        host = hostPath;
+      }
+      
+      // Extrair porta do host se existir
       if (host.includes(":")) {
         const parts = host.split(":");
         host = parts[0];
         port = parseInt(parts[1]);
+      } else {
+        // Porta padrão: 443 para wss://, 9001 para ws://
+        port = isSecure ? 443 : 9001;
       }
       
-      // Criar cliente Paho MQTT
-      this.client = new Paho.MQTT.Client(host, port, this.clientId);
+      // Criar cliente Paho MQTT com host, porta, caminho e clientId
+      this.client = new Paho.MQTT.Client(host, port, path, this.clientId);
       
       // Callbacks de conexão/desconexão
       this.client.onConnectionLost = (error) => {

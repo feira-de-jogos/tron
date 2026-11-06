@@ -119,7 +119,7 @@
     "public": [
       {
         "name": "Feira de Jogos (Principal) ⭐",
-        "url": "wss://feira-de-jogos.dev.br/mqtt",
+        "url": "wss://mqtt.feira-de-jogos.dev.br/mqtt",
         "type": "principal",
         "description": "Broker MQTT principal do projeto com WebSocket seguro",
         "protocol": "MQTT sobre WebSocket (seguro)"

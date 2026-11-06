@@ -12,7 +12,7 @@ MQTT sobre WebSocket é o **protocolo MQTT encapsulado dentro de conexões WebSo
 | **Protocolo** | Definido pela aplicação (JSON, dados binários, etc) | MQTT (padrão ISO/IEC) |
 | **Biblioteca** | APIs nativas do navegador | Paho MQTT (traduz MQTT para WebSocket) |
 | **Porta Padrão** | 9000, 8080, custom | 9001 (ws), 8884 (wss) |
-| **Exemplo** | `ws://localhost:9000` | `wss://feira-de-jogos.dev.br/mqtt` |
+| **Exemplo** | `ws://localhost:9000` | `wss://mqtt.feira-de-jogos.dev.br/mqtt` |
 
 ## Por Que Usar MQTT sobre WebSocket?
 
@@ -84,7 +84,7 @@ Display Visual (⚡ Disparo de laser)
 ### Recomendados
 
 #### 1. **Eclipse Mosquitto** ⭐ (Recomendado)
-- **URL**: `wss://feira-de-jogos.dev.br/mqtt`
+- **URL**: `wss://mqtt.feira-de-jogos.dev.br/mqtt`
 - **Tipo**: Público
 - **QoS**: 0, 1, 2
 - **Características**:
@@ -198,7 +198,7 @@ Para produção, use `wss://` em vez de `ws://`:
 
 ```javascript
 // Desenvolvimento (sem SSL)
-connectAsHost("wss://feira-de-jogos.dev.br/mqtt")
+connectAsHost("wss://mqtt.feira-de-jogos.dev.br/mqtt")
 
 // Produção (com SSL)
 connectAsHost("wss://broker.emqx.io:8883")
@@ -251,7 +251,7 @@ document.head.appendChild(script);
 npm install -g wscat
 
 # Testar conexão
-wscat -c wss://feira-de-jogos.dev.br/mqtt
+wscat -c wss://mqtt.feira-de-jogos.dev.br/mqtt
 ```
 
 ### Erro: "Tempo limite de conexão"

@@ -3,7 +3,7 @@
 ## 📋 Resumo da Mudança
 
 **De**: `ws://mqtt.eclipseprojects.io:9001` (público, não seguro)  
-**Para**: `wss://feira-de-jogos.dev.br/mqtt` (principal, seguro)  
+**Para**: `wss://mqtt.feira-de-jogos.dev.br/mqtt` (principal, seguro)  
 **Data**: 2024-11-06  
 **Tipo**: Atualização de Configuração
 
@@ -22,7 +22,7 @@
 
 ### Código
 - ✅ **mqtt-client.js**
-  - Linha 12: `brokerUrl: "wss://feira-de-jogos.dev.br/mqtt"`
+  - Linha 12: `brokerUrl: "wss://mqtt.feira-de-jogos.dev.br/mqtt"`
 
 ### Configuração
 - ✅ **mqtt-config.json**
@@ -43,7 +43,7 @@
 
 ### Principal (Padrão)
 ```javascript
-wss://feira-de-jogos.dev.br/mqtt  ⭐ Novo padrão
+wss://mqtt.feira-de-jogos.dev.br/mqtt  ⭐ Novo padrão
 ```
 
 ### Alternativos (Backup)
@@ -65,7 +65,7 @@ ws://localhost:8083                    // Docker EMQX
 
 ### Usar o Broker Padrão (Novo)
 ```javascript
-// Automaticamente conecta a wss://feira-de-jogos.dev.br/mqtt
+// Automaticamente conecta a wss://mqtt.feira-de-jogos.dev.br/mqtt
 connectAsHost()
 ```
 
@@ -89,7 +89,7 @@ Após a atualização, ao executar:
 
 ```javascript
 console.log(MQTTClient.brokerUrl)
-// Resultado: wss://feira-de-jogos.dev.br/mqtt
+// Resultado: wss://mqtt.feira-de-jogos.dev.br/mqtt
 ```
 
 ---
@@ -130,7 +130,7 @@ A mudança é **backward-compatible**:
 connectAsHost("ws://mqtt.eclipseprojects.io:9001")
 
 // Novo padrão
-connectAsHost()  // ← Usa wss://feira-de-jogos.dev.br/mqtt
+connectAsHost()  // ← Usa wss://mqtt.feira-de-jogos.dev.br/mqtt
 ```
 
 ---
@@ -154,7 +154,7 @@ Todos esses documentos foram atualizados:
 ## 🎯 Próximos Passos
 
 1. **Testar**: Execute `connectAsHost()` no console
-2. **Verificar**: Console deve mostrar `wss://feira-de-jogos.dev.br/mqtt`
+2. **Verificar**: Console deve mostrar `wss://mqtt.feira-de-jogos.dev.br/mqtt`
 3. **Confirmar**: Ver mensagem `[MQTT] ✅ Conectado`
 
 ---
@@ -180,7 +180,7 @@ connectAsHost("ws://localhost:9001")
 
 ```
 Commit: [será criado]
-Mensagem: Atualizar broker MQTT principal para wss://feira-de-jogos.dev.br/mqtt
+Mensagem: Atualizar broker MQTT principal para wss://mqtt.feira-de-jogos.dev.br/mqtt
 
 Mudanças:
 - mqtt-client.js: brokerUrl padrão atualizado

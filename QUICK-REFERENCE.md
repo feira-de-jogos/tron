@@ -66,7 +66,7 @@ tron/spectators       → Info de espectadores conectados
 
 ```javascript
 // ⭐ Recomendado
-connectAsHost("wss://feira-de-jogos.dev.br/mqtt")
+connectAsHost("wss://mqtt.feira-de-jogos.dev.br/mqtt")
 
 // Alternativas
 connectAsHost("wss://broker.hivemq.com:8884")        // MQTT 5.0

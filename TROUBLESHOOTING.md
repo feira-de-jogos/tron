@@ -69,7 +69,7 @@ Accessibility.addSoundEvent("laser", "Test")  // Teste manual
 
 ### Público (sem config)
 ```javascript
-connectAsHost("wss://feira-de-jogos.dev.br/mqtt")  // ⭐ Padrão
+connectAsHost("wss://mqtt.feira-de-jogos.dev.br/mqtt")  // ⭐ Padrão
 connectAsHost("wss://broker.hivemq.com:8884")       // SSL
 connectAsHost("wss://broker.emqx.io:8883")          // SSL
 ```
