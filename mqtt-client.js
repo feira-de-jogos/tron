@@ -79,7 +79,7 @@ const MQTTClient = {
         this._handleMessage(message.destinationName, message.payloadString);
       };
       
-      // Opções de conexão
+      // Opções de conexão (propriedades válidas do Paho MQTT)
       const options = {
         onSuccess: () => {
           console.log("[MQTT] ✅ Conectado ao broker MQTT");
@@ -105,8 +105,9 @@ const MQTTClient = {
         
         useSSL: this.brokerUrl.startsWith("wss"),
         cleanSession: true,
-        reconnect: true,
         keepAliveInterval: 30
+        // Nota: 'reconnect' não é suportado pelo Paho MQTT v1.0.1
+        // A reconexão é implementada manualmente em _attemptReconnect()
       };
       
       // Conectar ao broker
