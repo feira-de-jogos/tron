@@ -151,7 +151,7 @@
       }
     ],
     "custom": {
-      "url": "wss://seu-broker.com:8883",
+      "url": "wss://mqtt.feira-de-jogos.dev.br/mqtt",
       "type": "custom",
       "description": "Substitua pela URL do seu broker privado"
     }
