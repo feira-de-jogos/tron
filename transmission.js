@@ -11,6 +11,7 @@ const GameTransmission = {
   updateInterval: 50, // ms entre atualizações
   updateTimer: null,
   lastGameState: null,
+  gameStateProvider: null, // Função que fornece o estado do jogo
   
   /**
    * Inicializa o módulo de transmissão
@@ -30,6 +31,20 @@ const GameTransmission = {
     Accessibility.initialize();
     
     this.enabled = true;
+  },
+  
+  /**
+   * Registra uma função que fornece o estado atual do jogo
+   * Exemplo: GameTransmission.setGameStateProvider(() => ({
+   *   players: [...],
+   *   projectiles: [...],
+   *   gameTime: 0,
+   *   gameStatus: "playing"
+   * }))
+   */
+  setGameStateProvider(providerFunction) {
+    this.gameStateProvider = providerFunction;
+    console.log("[GameTransmission] Game state provider registrado");
   },
   
   /**
@@ -96,10 +111,25 @@ const GameTransmission = {
   
   /**
    * Captura o estado atual do jogo
-   * Nota: precisa ser integrada com o loop principal do jogo
+   * Usa gameStateProvider se registrado, caso contrário retorna null
    */
   _captureGameState() {
-    // Este método será sobrescrito pela integração do jogo
+    // Se um provider foi registrado, usar ele
+    if (this.gameStateProvider && typeof this.gameStateProvider === "function") {
+      try {
+        return this.gameStateProvider();
+      } catch (e) {
+        console.error("[GameTransmission] Erro ao capturar estado do jogo:", e);
+        return null;
+      }
+    }
+    
+    // Fallback: tentar acessar objeto global window.gameState (se existir)
+    if (window.gameState && typeof window.gameState === "object") {
+      return window.gameState;
+    }
+    
+    // Sem provider registrado, retornar null
     return null;
   },
   
