@@ -1,7 +1,16 @@
-const paletaCoresInimigo = ['#ff3b3b', '#ff3bda', '#9d3bff', '#3bff5b', '#ffee3b', '#ff7b00'];
+const paletaCoresInimigo = [
+  "#ff3b3b",
+  "#ff3bda",
+  "#9d3bff",
+  "#3bff5b",
+  "#ffee3b",
+  "#ff7b00",
+];
 
 function gerarCorAleatoria() {
-  return paletaCoresInimigo[Math.floor(Math.random() * paletaCoresInimigo.length)];
+  return paletaCoresInimigo[
+    Math.floor(Math.random() * paletaCoresInimigo.length)
+  ];
 }
 
 class Inimigo {
@@ -10,7 +19,7 @@ class Inimigo {
     this.y = y;
     this.tamanho = 20;
     this.velocidade = 250;
-    this.cor = cor || '#ff5b3b';
+    this.cor = cor || "#ff5b3b";
     this.morto = false;
     this.proximoTiroEm = 0;
     this.direcaoAtual = { x: 1, y: 0 };
@@ -30,13 +39,19 @@ class Inimigo {
     const checarFrente = mundo.colideComParede(
       this.x + Math.cos(anguloBase) * 40,
       this.y + Math.sin(anguloBase) * 40,
-      this.tamanho
+      this.tamanho,
     );
 
     if (checarFrente) {
       const esqX = Math.cos(anguloBase - Math.PI / 3);
       const esqY = Math.sin(anguloBase - Math.PI / 3);
-      if (!mundo.colideComParede(this.x + esqX * 40, this.y + esqY * 40, this.tamanho)) {
+      if (
+        !mundo.colideComParede(
+          this.x + esqX * 40,
+          this.y + esqY * 40,
+          this.tamanho,
+        )
+      ) {
         dirX = esqX;
         dirY = esqY;
       } else {
@@ -57,7 +72,11 @@ class Inimigo {
       jogador.receberAtaqueInimigo();
     }
 
-    if (jogador.estaVivo() && distJogador < 480 && tempoAtual > this.proximoTiroEm) {
+    if (
+      jogador.estaVivo() &&
+      distJogador < 480 &&
+      tempoAtual > this.proximoTiroEm
+    ) {
       criarDiscoInimigo(this.x, this.y, dirX, dirY, this.cor);
       this.proximoTiroEm = tempoAtual + 2000 + Math.random() * 500;
     }
@@ -73,7 +92,7 @@ class Inimigo {
     const angulo = Math.atan2(this.direcaoAtual.y, this.direcaoAtual.x);
     ctx.rotate(angulo);
 
-    desenharLightCycleTopDown(ctx, this.cor, '#200707', false);
+    desenharLightCycleTopDown(ctx, this.cor, "#200707", false);
 
     ctx.restore();
   }

@@ -1,42 +1,56 @@
 const Interface = {
   elementos: {},
   inicializar() {
-    this.elementos.telaMenu = document.getElementById('tela-menu');
-    this.elementos.telaDerrota = document.getElementById('tela-derrota');
-    this.elementos.telaVitoria = document.getElementById('tela-vitoria');
-    this.elementos.btnIniciar = document.getElementById('btn-iniciar');
-    this.elementos.btnReiniciarDerrota = document.getElementById('btn-reiniciar-derrota');
-    this.elementos.btnReiniciarVitoria = document.getElementById('btn-reiniciar-vitoria');
-    this.elementos.barraVida = document.getElementById('barra-vida');
-    this.elementos.barraEnergia = document.getElementById('barra-energia');
+    this.elementos.telaMenu = document.getElementById("tela-menu");
+    this.elementos.telaDerrota = document.getElementById("tela-derrota");
+    this.elementos.telaVitoria = document.getElementById("tela-vitoria");
+    this.elementos.btnIniciar = document.getElementById("btn-iniciar");
+    this.elementos.btnReiniciarDerrota = document.getElementById(
+      "btn-reiniciar-derrota",
+    );
+    this.elementos.btnReiniciarVitoria = document.getElementById(
+      "btn-reiniciar-vitoria",
+    );
+    this.elementos.barraVida = document.getElementById("barra-vida");
+    this.elementos.barraEnergia = document.getElementById("barra-energia");
   },
   configurarBotoes(aoIniciar, aoReiniciar) {
     this.elementos.btnIniciar.onclick = aoIniciar;
     this.elementos.btnReiniciarDerrota.onclick = aoReiniciar;
     this.elementos.btnReiniciarVitoria.onclick = aoReiniciar;
   },
-  esconderMenu() { this.elementos.telaMenu.classList.add('escondido'); },
-  mostrarDerrota() { this.elementos.telaDerrota.classList.remove('escondido'); },
-  esconderDerrota() { this.elementos.telaDerrota.classList.add('escondido'); },
-  mostrarVitoria() { this.elementos.telaVitoria.classList.remove('escondido'); },
-  esconderVitoria() { this.elementos.telaVitoria.classList.add('escondido'); },
+  esconderMenu() {
+    this.elementos.telaMenu.classList.add("escondido");
+  },
+  mostrarDerrota() {
+    this.elementos.telaDerrota.classList.remove("escondido");
+  },
+  esconderDerrota() {
+    this.elementos.telaDerrota.classList.add("escondido");
+  },
+  mostrarVitoria() {
+    this.elementos.telaVitoria.classList.remove("escondido");
+  },
+  esconderVitoria() {
+    this.elementos.telaVitoria.classList.add("escondido");
+  },
   atualizarHUD(jogador) {
     const pctVida = Math.max(0, jogador.vida / jogador.vidaMax) * 100;
     const pctEnergia = Math.max(0, jogador.energia / jogador.energiaMax) * 100;
-    this.elementos.barraVida.style.width = pctVida + '%';
-    this.elementos.barraEnergia.style.width = pctEnergia + '%';
-  }
+    this.elementos.barraVida.style.width = pctVida + "%";
+    this.elementos.barraEnergia.style.width = pctEnergia + "%";
+  },
 };
 
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 function ajustarCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 ajustarCanvas();
-window.addEventListener('resize', ajustarCanvas);
+window.addEventListener("resize", ajustarCanvas);
 
 let jogador, inimigos, discos, rastro, destrocos, camera;
 let rodando = false;
@@ -76,7 +90,10 @@ function spawnInimigo() {
   do {
     x = Math.random() * Mundo.largura;
     y = Math.random() * Mundo.altura;
-  } while (Math.hypot(x - jogador.x, y - jogador.y) < 600 || Mundo.colideComParede(x, y, 20));
+  } while (
+    Math.hypot(x - jogador.x, y - jogador.y) < 600 ||
+    Mundo.colideComParede(x, y, 20)
+  );
 
   inimigos.push(new Inimigo(x, y, gerarCorAleatoria()));
 }
@@ -85,7 +102,16 @@ function arremessarDiscoJogador() {
   if (!jogador.podeArremessarDisco()) return;
   playThrow();
   jogador.energia -= 30;
-  discos.push(new Disco(jogador.x, jogador.y, jogador.direcao.x, jogador.direcao.y, true, jogador.cor));
+  discos.push(
+    new Disco(
+      jogador.x,
+      jogador.y,
+      jogador.direcao.x,
+      jogador.direcao.y,
+      true,
+      jogador.cor,
+    ),
+  );
 }
 
 function criarDiscoInimigo(x, y, dirX, dirY, cor) {
@@ -118,16 +144,26 @@ function atualizar(dt, tempoAtual) {
   }
 
   for (const disco of discos) {
-    disco.atualizar(dt, jogador, inimigos, tempoAtual, Mundo, adicionarDestroco);
+    disco.atualizar(
+      dt,
+      jogador,
+      inimigos,
+      tempoAtual,
+      Mundo,
+      adicionarDestroco,
+    );
   }
-  discos = discos.filter(d => !d.finalizado);
-  inimigos = inimigos.filter(i => !i.morto);
+  discos = discos.filter((d) => !d.finalizado);
+  inimigos = inimigos.filter((i) => !i.morto);
 
   if (inimigos.length === 0 && jogador.estaVivo()) {
     spawnInimigo();
   }
 
-  const distPortal = Math.hypot(jogador.x - Mundo.portal.x, jogador.y - Mundo.portal.y);
+  const distPortal = Math.hypot(
+    jogador.x - Mundo.portal.x,
+    jogador.y - Mundo.portal.y,
+  );
   if (jogador.estaVivo() && distPortal < Mundo.portal.raio) {
     rodando = false;
     playPortal();
@@ -162,25 +198,41 @@ function desenhar(tempoAtual) {
   jogador.desenhar(ctx, camera);
 }
 
-window.addEventListener('keydown', (e) => {
+window.addEventListener("keydown", (e) => {
   switch (e.code) {
-    case 'ArrowUp': input.cima = true; break;
-    case 'ArrowDown': input.baixo = true; break;
-    case 'ArrowLeft': input.esquerda = true; break;
-    case 'ArrowRight': input.direita = true; break;
-    case 'Space':
+    case "ArrowUp":
+      input.cima = true;
+      break;
+    case "ArrowDown":
+      input.baixo = true;
+      break;
+    case "ArrowLeft":
+      input.esquerda = true;
+      break;
+    case "ArrowRight":
+      input.direita = true;
+      break;
+    case "Space":
       if (rodando) arremessarDiscoJogador();
       e.preventDefault();
       break;
   }
 });
 
-window.addEventListener('keyup', (e) => {
+window.addEventListener("keyup", (e) => {
   switch (e.code) {
-    case 'ArrowUp': input.cima = false; break;
-    case 'ArrowDown': input.baixo = false; break;
-    case 'ArrowLeft': input.esquerda = false; break;
-    case 'ArrowRight': input.direita = false; break;
+    case "ArrowUp":
+      input.cima = false;
+      break;
+    case "ArrowDown":
+      input.baixo = false;
+      break;
+    case "ArrowLeft":
+      input.esquerda = false;
+      break;
+    case "ArrowRight":
+      input.direita = false;
+      break;
   }
 });
 

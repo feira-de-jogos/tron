@@ -1,11 +1,11 @@
 function desenharMotoDespedacada(ctx, corNeon) {
   ctx.save();
-  ctx.fillStyle = 'rgba(10, 5, 5, 0.7)';
+  ctx.fillStyle = "rgba(10, 5, 5, 0.7)";
   ctx.beginPath();
   ctx.arc(0, 0, 18, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = '#111';
+  ctx.fillStyle = "#111";
   ctx.strokeStyle = corNeon;
   ctx.lineWidth = 1.5;
   ctx.fillRect(8, -12, 10, 14);
@@ -19,7 +19,12 @@ function desenharMotoDespedacada(ctx, corNeon) {
   ctx.restore();
 }
 
-function desenharLightCycleTopDown(ctx, corNeon, escuroPneu, destruida = false) {
+function desenharLightCycleTopDown(
+  ctx,
+  corNeon,
+  escuroPneu,
+  destruida = false,
+) {
   if (destruida) {
     desenharMotoDespedacada(ctx, corNeon);
     return;
@@ -36,7 +41,7 @@ function desenharLightCycleTopDown(ctx, corNeon, escuroPneu, destruida = false) 
   ctx.fillRect(-26, -10, 16, 20);
   ctx.strokeRect(-26, -10, 16, 20);
 
-  ctx.fillStyle = '#050a12';
+  ctx.fillStyle = "#050a12";
   ctx.beginPath();
   ctx.moveTo(20, -7);
   ctx.lineTo(8, -12);
@@ -50,7 +55,7 @@ function desenharLightCycleTopDown(ctx, corNeon, escuroPneu, destruida = false) 
   ctx.fill();
   ctx.stroke();
 
-  ctx.fillStyle = '#020408';
+  ctx.fillStyle = "#020408";
   ctx.beginPath();
   ctx.arc(-2, 0, 7, 0, Math.PI * 2);
   ctx.fill();
@@ -66,7 +71,7 @@ function desenharLightCycleTopDown(ctx, corNeon, escuroPneu, destruida = false) 
   ctx.lineTo(14, 7);
   ctx.stroke();
 
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = "#ffffff";
   ctx.fillRect(18, -2, 5, 4);
 
   ctx.restore();
@@ -101,7 +106,7 @@ class Jogador {
 
     this.velocidade = 450;
     this.direcao = { x: 1, y: 0 };
-    this.cor = '#4de3ff';
+    this.cor = "#4de3ff";
     this.destruido = false;
     this.emMovimento = false;
   }
@@ -112,13 +117,14 @@ class Jogador {
       return;
     }
 
-    let dx = 0, dy = 0;
+    let dx = 0,
+      dy = 0;
     if (input.cima) dy -= 1;
     if (input.baixo) dy += 1;
     if (input.esquerda) dx -= 1;
     if (input.direita) dx += 1;
 
-    this.emMovimento = (dx !== 0 || dy !== 0);
+    this.emMovimento = dx !== 0 || dy !== 0;
     updateMotoAudio(this.emMovimento);
 
     if (this.emMovimento) {
@@ -136,11 +142,19 @@ class Jogador {
 
     this.energia = Math.min(this.energiaMax, this.energia + 25 * dt);
 
-    this.x = Math.max(this.tamanho, Math.min(mundo.largura - this.tamanho, this.x));
-    this.y = Math.max(this.tamanho, Math.min(mundo.altura - this.tamanho, this.y));
+    this.x = Math.max(
+      this.tamanho,
+      Math.min(mundo.largura - this.tamanho, this.x),
+    );
+    this.y = Math.max(
+      this.tamanho,
+      Math.min(mundo.altura - this.tamanho, this.y),
+    );
   }
 
-  podeArremessarDisco() { return !this.destruido && this.energia >= 30; }
+  podeArremessarDisco() {
+    return !this.destruido && this.energia >= 30;
+  }
 
   receberAtaqueInimigo() {
     if (this.destruido) return;
@@ -167,7 +181,9 @@ class Jogador {
     this.vida = Math.min(this.vidaMax, this.vida + quantidade);
   }
 
-  estaVivo() { return !this.destruido && this.vida > 0; }
+  estaVivo() {
+    return !this.destruido && this.vida > 0;
+  }
 
   desenhar(ctx, camera) {
     const sx = this.x - camera.x;
@@ -178,7 +194,7 @@ class Jogador {
     const angulo = Math.atan2(this.direcao.y, this.direcao.x);
     ctx.rotate(angulo);
 
-    desenharLightCycleTopDown(ctx, this.cor, '#071624', this.destruido);
+    desenharLightCycleTopDown(ctx, this.cor, "#071624", this.destruido);
 
     ctx.restore();
   }

@@ -2,22 +2,22 @@
 
 <img width="60" height="60" alt="Capa do Jogo" src="https://github.com/user-attachments/assets/c68090a8-06fb-4cbd-8bcd-ada39090e647" />
 
-Desenvolvimento de aplicativo de jogo para a disciplina de  TES786205 - Topicos Especiais, semestre 2026.02.
+Desenvolvimento de aplicativo de jogo para a disciplina de TES786205 - Topicos Especiais, semestre 2026.02.
 
-Equipe: ANDREIA CRISTINA DA SILVA e  FERNANDA MATTOS VIEIRA
+Equipe: ANDREIA CRISTINA DA SILVA e FERNANDA MATTOS VIEIRA
 
 # TRON : THE GAME ARCADE
 
-Projeto de jogo 2D desenvolvido em HTML5 Canvas e JavaScript modularizado, inspirado no universo de **TRON**. O jogador controla um *Light Cycle* em uma cidade em malha (Grid), enfrentando inimigos e utilizando discos e rastros de luz para alcançar o Portal de fuga para o mundo real.
+Projeto de jogo 2D desenvolvido em HTML5 Canvas e JavaScript modularizado, inspirado no universo de **TRON**. O jogador controla um _Light Cycle_ em uma cidade em malha (Grid), enfrentando inimigos e utilizando discos e rastros de luz para alcançar o Portal de fuga para o mundo real.
 
 ---
 
 ## Tecnologias Utilizadas
 
-* **HTML5**: Estrutura da aplicação (`Canvas API`).
-* **CSS3**: Estilização cibernética, efeitos Neon e HUD responsivo.
-* **JavaScript (ES6+)**: Lógica de jogo orientada a objetos e modularizada.
-* **Web Audio API**: Geração de efeitos sonoros sintéticos (sem arquivos de áudio externos).
+- **HTML5**: Estrutura da aplicação (`Canvas API`).
+- **CSS3**: Estilização cibernética, efeitos Neon e HUD responsivo.
+- **JavaScript (ES6+)**: Lógica de jogo orientada a objetos e modularizada.
+- **Web Audio API**: Geração de efeitos sonoros sintéticos (sem arquivos de áudio externos).
 
 ---
 
@@ -39,3 +39,4 @@ Jogo-Tron/
 
 
 
+```

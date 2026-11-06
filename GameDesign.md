@@ -1,4 +1,4 @@
-Documento de Design de Jogo (GDD)
+# Documento de Design de Jogo (GDD)
 
 Projeto: TRON
 
@@ -67,7 +67,7 @@ Detalhes
 As motocicletas digitais podem ser utilizadas para exploração, corridas e batalhas.
 Como funciona
 Durante a condução, a moto gera paredes de luz que podem destruir inimigos ou bloquear seus movimentos.
-***Mecânica do jogo (prompts):***
+**_Mecânica do jogo (prompts):_**
 *Controles:
 -WASD / Setas: Movimentam o Personagem Light Cycle (moto).
 -Espaço: dispara o disco de luz.
@@ -79,7 +79,7 @@ Durante a condução, a moto gera paredes de luz que podem destruir inimigos ou 
 -Se o personagem alcançar o Portal do Mundo Real, ele ganha.
 -Se o personagem atirar no inimigo, ele morre. Se o personagem colidir com o inimigo, os dois morrem.
 -Quando um inimigo morre, outro surge imediatamente.
-*Ambiente
+\*Ambiente
 -Ambiente de fliperama (top down) em 2D.
 -Grid em forma de labirinto, em cidade digital com contro no Portal de Luz.
 
@@ -138,7 +138,7 @@ Soldados: Arquivistas
 ISOs: Ambientes
 Cidade Central: Arena de Light Cycles
 Servidores: Núcleo Central
-Arquivos: Laboratórios 
+Arquivos: Laboratórios
 
 Rede Externa
 Som: Ambiente
@@ -257,30 +257,30 @@ Lançamento mundial
 
 Equipe
 Equipe Principal
-Cargo	Função	Regime
-Diretor Criativo	Direção geral	Integral
-Game Designer	Mecânicas	Integral
-Programador Líder	Sistemas	Integral
-Artista 3D	Modelagem	Integral
-Animador	Animações	Integral
-Designer de Som	Áudio	Parcial
-Roteirista	História	Parcial
-QA Tester	Testes	Integral
+Cargo Função Regime
+Diretor Criativo Direção geral Integral
+Game Designer Mecânicas Integral
+Programador Líder Sistemas Integral
+Artista 3D Modelagem Integral
+Animador Animações Integral
+Designer de Som Áudio Parcial
+Roteirista História Parcial
+QA Tester Testes Integral
 Marketing
-Cargo	Função
-Gerente de Marketing	Divulgação
-Social Media	Redes sociais
-Designer	Material promocional
-Editor de Vídeo	Trailers
+Cargo Função
+Gerente de Marketing Divulgação
+Social Media Redes sociais
+Designer Material promocional
+Editor de Vídeo Trailers
 
 Custos Estimados
-Categoria	Valor aproximado
-Equipe	US$ 12.000.000
-Licenciamento da IP	US$ 6.000.000
-Software	US$ 300.000
-Equipamentos	US$ 700.000
-Marketing	US$ 8.000.000
-Testes	US$ 1.000.000
+Categoria Valor aproximado
+Equipe US$ 12.000.000
+Licenciamento da IP US$ 6.000.000
+Software US$ 300.000
+Equipamentos US$ 700.000
+Marketing US$ 8.000.000
+Testes US$ 1.000.000
 Custo Total Estimado US$ 28.000.000
 
 Referências:

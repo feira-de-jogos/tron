@@ -4,7 +4,7 @@
   --laranja-neon: #ff9331;
   --preto-grid: #030710;
   --vermelho-alerta: #ff3b3b;
-  --fonte-tron: 'Orbitron', 'Courier New', monospace;
+  --fonte-tron: "Orbitron", "Courier New", monospace;
 }
 
 * {
@@ -13,7 +13,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   background: var(--preto-grid);
@@ -106,19 +107,25 @@ html, body {
   font-weight: 900;
   letter-spacing: 12px;
   color: var(--azul-neon);
-  text-shadow: 0 0 12px var(--azul-neon), 0 0 40px var(--azul-neon-escuro);
+  text-shadow:
+    0 0 12px var(--azul-neon),
+    0 0 40px var(--azul-neon-escuro);
 }
 
 .titulo-derrota {
   color: var(--vermelho-alerta);
-  text-shadow: 0 0 12px var(--vermelho-alerta), 0 0 40px #7a0f0f;
+  text-shadow:
+    0 0 12px var(--vermelho-alerta),
+    0 0 40px #7a0f0f;
   font-size: 48px;
   letter-spacing: 8px;
 }
 
 .titulo-vitoria {
   color: #3bff5b;
-  text-shadow: 0 0 12px #3bff5b, 0 0 40px #0f7a28;
+  text-shadow:
+    0 0 12px #3bff5b,
+    0 0 40px #0f7a28;
   font-size: 40px;
   letter-spacing: 8px;
 }
