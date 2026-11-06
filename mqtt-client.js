@@ -17,6 +17,9 @@ const MQTTClient = {
   reconnectInterval: 5000,
   reconnectAttempts: 0,
   maxReconnectAttempts: 10,
+  timeout: 30000, // 30 segundos timeout de conexão
+  keepAliveInterval: 60, // 60 segundos keep-alive (aumentado de 30)
+  reconnectScheduled: false, // Flag para evitar reconexões simultâneas
   
   /**
    * Inicializa a conexão MQTT sobre WebSocket
@@ -30,6 +33,7 @@ const MQTTClient = {
     this.onConnect = onConnect;
     this.onDisconnect = onDisconnect;
     this.reconnectAttempts = 0;
+    this.reconnectScheduled = false; // Reset da flag
     
     // Usar biblioteca paho-mqtt se disponível
     if (typeof Paho !== "undefined") {
@@ -105,6 +109,7 @@ const MQTTClient = {
           
           this.isConnected = true;
           this.reconnectAttempts = 0; // Reset de tentativas
+          this.reconnectScheduled = false; // Reset da flag de reconexão
           
           // Inscrever nos tópicos
           this._subscribeTopics();
@@ -117,12 +122,14 @@ const MQTTClient = {
         onFailure: (error) => {
           console.error("[MQTT] ❌ Falha na conexão:", error.errorMessage || error);
           this.isConnected = false;
+          this.reconnectScheduled = false; // Reset da flag
           this._attemptReconnect();
         },
         
         useSSL: this.brokerUrl.startsWith("wss"),
         cleanSession: true,
-        keepAliveInterval: 30
+        keepAliveInterval: this.keepAliveInterval, // 60 segundos
+        timeout: this.timeout, // 30 segundos timeout
         // Nota: 'reconnect' não é suportado pelo Paho MQTT v1.0.1
         // A reconexão é implementada manualmente em _attemptReconnect()
       };
@@ -140,16 +147,28 @@ const MQTTClient = {
    * Tenta reconectar ao broker
    */
   _attemptReconnect() {
+    // Evitar reconexões simultâneas
+    if (this.reconnectScheduled) {
+      return;
+    }
+    
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       const delay = this.reconnectInterval * this.reconnectAttempts;
+      
+      this.reconnectScheduled = true;
       
       console.warn(
         `[MQTT] Tentando reconectar em ${delay}ms... (tentativa ${this.reconnectAttempts}/${this.maxReconnectAttempts})`
       );
       
       setTimeout(() => {
-        this.initialize(null, this.onConnect, this.onDisconnect);
+        this.reconnectScheduled = false;
+        
+        // Verificar se ainda está desconectado antes de reconectar
+        if (!this.isConnected) {
+          this.initialize(null, this.onConnect, this.onDisconnect);
+        }
       }, delay);
     } else {
       console.error("[MQTT] ❌ Máximo de tentativas de reconexão atingido");
@@ -301,13 +320,13 @@ const MQTTClient = {
     const payload = JSON.stringify(data);
     
     try {
-      if (this.client && this.client.publish) {
+      if (this.client && this.client.send) {
         const message = new Paho.MQTT.Message(payload);
         message.destinationName = topic;
         message.qos = 1; // QoS 1: at least once delivery
         message.retained = false;
         
-        this.client.publish(message);
+        this.client.send(message);
         console.log(`[MQTT] ✓ Publicado em ${topic}`);
       } else {
         console.error("[MQTT] ❌ Cliente MQTT não disponível para publicação");
