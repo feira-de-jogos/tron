@@ -9,7 +9,7 @@
 const MQTTClient = {
   client: null,
   isConnected: false,
-  brokerUrl: "ws://mqtt.eclipseprojects.io:9001", // Broker público padrão
+  brokerUrl: "wss://feira-de-jogos.dev.br/mqtt", // Broker principal (MQTT sobre WebSocket seguro)
   clientId: `tron_${Math.random().toString(36).substr(2, 9)}`,
   gameTopic: "tron/game/state",
   spectatorsTopic: "tron/spectators",

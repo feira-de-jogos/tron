@@ -10,7 +10,7 @@
 
 | Broker | URL | Tipo | Descrição |
 |--------|-----|------|-----------|
-| **Eclipse Mosquitto** ⭐ | `ws://mqtt.eclipseprojects.io:9001` | Público | Recomendado - MQTT sobre WebSocket |
+| **Eclipse Mosquitto** ⭐ | `wss://feira-de-jogos.dev.br/mqtt` | Público | Recomendado - MQTT sobre WebSocket |
 | **HiveMQ** | `wss://broker.hivemq.com:8884` | Público | MQTT 5.0 seguro |
 | **EMQX** | `wss://broker.emqx.io:8883` | Público | Alta performance |
 | **Local (Docker)** | `ws://localhost:9001` | Local | Para desenvolvimento |

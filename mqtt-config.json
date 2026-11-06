@@ -118,7 +118,14 @@
   "brokers": {
     "public": [
       {
-        "name": "Eclipse Mosquitto (Recomendado)",
+        "name": "Feira de Jogos (Principal) ⭐",
+        "url": "wss://feira-de-jogos.dev.br/mqtt",
+        "type": "principal",
+        "description": "Broker MQTT principal do projeto com WebSocket seguro",
+        "protocol": "MQTT sobre WebSocket (seguro)"
+      },
+      {
+        "name": "Eclipse Mosquitto (Alternativo)",
         "url": "ws://mqtt.eclipseprojects.io:9001",
         "type": "public",
         "description": "Broker MQTT público com suporte a WebSocket",
