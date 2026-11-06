@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRON - Teste de Transmissão e Acessibilidade</title>
+    <style>
+        :root {
+            --azul-neon: #4de3ff;
+            --laranja-neon: #ff9331;
+            --preto-grid: #030710;
+            --vermelho: #ff3b3b;
+            --verde: #3bff5b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--preto-grid);
+            font-family: "Orbitron", monospace;
+            color: var(--azul-neon);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--azul-neon);
+            letter-spacing: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(3, 7, 16, 0.8);
+            border: 2px solid var(--azul-neon);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(77, 227, 255, 0.3);
+        }
+
+        .panel h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: var(--laranja-neon);
+            letter-spacing: 1px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(77, 227, 255, 0.2);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #0f7a99;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            background: rgba(15, 122, 153, 0.2);
+            border: 1px solid var(--azul-neon);
+            color: var(--azul-neon);
+            font-family: "Orbitron", monospace;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid var(--azul-neon);
+            color: var(--azul-neon);
+            font-family: "Orbitron", monospace;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: var(--azul-neon);
+            color: var(--preto-grid);
+            box-shadow: 0 0 15px var(--azul-neon);
+        }
+
+        button.success {
+            border-color: var(--verde);
+            color: var(--verde);
+        }
+
+        button.success:hover {
+            background: var(--verde);
+            color: var(--preto-grid);
+        }
+
+        button.danger {
+            border-color: var(--vermelho);
+            color: var(--vermelho);
+        }
+
+        button.danger:hover {
+            background: var(--vermelho);
+            color: var(--preto-grid);
+        }
+
+        .status {
+            padding: 10px;
+            background: rgba(15, 122, 153, 0.2);
+            border: 1px solid var(--azul-neon);
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(77, 227, 255, 0.1);
+        }
+
+        .status-line:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #0f7a99;
+        }
+
+        .status-value {
+            color: var(--azul-neon);
+            font-weight: bold;
+        }
+
+        .status-value.connected {
+            color: var(--verde);
+        }
+
+        .status-value.disconnected {
+            color: var(--vermelho);
+        }
+
+        .event-log {
+            background: rgba(3, 7, 16, 0.6);
+            border: 1px solid #0f7a99;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+
+        .event-item {
+            padding: 3px;
+            border-bottom: 1px solid rgba(77, 227, 255, 0.1);
+            color: #4de3ff;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #0f7a99;
+            font-size: 0.9em;
+            color: #0f7a99;
+        }
+
+        .success-message {
+            color: var(--verde);
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .error-message {
+            color: var(--vermelho);
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .panel {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 TRON - Teste MQTT & Acessibilidade</h1>
+
+        <div class="grid">
+            <!-- Painel de Conexão -->
+            <div class="panel">
+                <h2>🔌 Conexão MQTT</h2>
+
+                <div class="section">
+                    <label for="broker-url">URL do Broker:</label>
+                    <input type="text" id="broker-url" 
+                        value="ws://mqtt.eclipseprojects.io:9001"
+                        placeholder="wss://seu-broker.com:8883">
+                </div>
+
+                <div class="section">
+                    <button class="success" id="btn-connect-host">
+                        ✅ Conectar como Host
+                    </button>
+                    <button id="btn-connect-spectator">
+                        👁️ Conectar como Espectador
+                    </button>
+                    <button class="danger" id="btn-disconnect">
+                        ❌ Desconectar
+                    </button>
+                </div>
+
+                <div class="section">
+                    <label>Status da Conexão:</label>
+                    <div class="status" id="mqtt-status">
+                        <div class="status-line">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value disconnected" id="mqtt-connected">Desconectado</span>
+                        </div>
+                        <div class="status-line">
+                            <span class="status-label">Broker:</span>
+                            <span class="status-value" id="mqtt-broker">-</span>
+                        </div>
+                        <div class="status-line">
+                            <span class="status-label">Client ID:</span>
+                            <span class="status-value" id="mqtt-client-id">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel de Acessibilidade -->
+            <div class="panel">
+                <h2>♿ Acessibilidade</h2>
+
+                <div class="section">
+                    <button id="btn-toggle-accessibility">
+                        🎵 Ativar Legendas
+                    </button>
+                </div>
+
+                <div class="section">
+                    <label>Status de Acessibilidade:</label>
+                    <div class="status" id="accessibility-status">
+                        <div class="status-line">
+                            <span class="status-label">Ativada:</span>
+                            <span class="status-value disconnected" id="accessibility-enabled">Não</span>
+                        </div>
+                        <div class="status-line">
+                            <span class="status-label">Mensagens:</span>
+                            <span class="status-value" id="accessibility-messages">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <label>Log de Acessibilidade:</label>
+                    <div class="event-log" id="accessibility-log">
+                        <div class="event-item">Aguardando eventos...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Testes -->
+        <div class="panel">
+            <h2>🧪 Simular Eventos</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                <button id="btn-event-laser">⚡ Laser</button>
+                <button id="btn-event-throw">💣 Throw</button>
+                <button id="btn-event-derez">💥 Derez</button>
+                <button id="btn-event-portal">🌀 Portal</button>
+                <button id="btn-event-collision">💔 Colisão</button>
+                <button id="btn-event-energy-low">⚠️ Energia Baixa</button>
+                <button id="btn-event-energy-boost">⚡ Energia +</button>
+                <button id="btn-event-victory">🏆 Vitória</button>
+                <button id="btn-event-game-start">▶️ Início</button>
+                <button id="btn-event-game-over">⏹️ Fim</button>
+            </div>
+
+            <div class="section" style="margin-top: 15px;">
+                <label>Log de Eventos MQTT:</label>
+                <div class="event-log" id="mqtt-log">
+                    <div class="event-item">Nenhum evento ainda...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Versão 1.0.0 | TRON - MQTT WebSocket & Acessibilidade</p>
+            <p>Documentação: <strong>QUICK-START.md</strong> | <strong>MQTT-ACCESSIBILITY-README.md</strong></p>
+        </div>
+    </div>
+
+    <!-- Carregar módulos (ajuste os caminhos conforme necessário) -->
+    <script src="../mqtt-client.js"></script>
+    <script src="../accessibility.js"></script>
+    <script src="../transmission.js"></script>
+
+    <script>
+        // Injetar estilos de acessibilidade
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = accessibilityStyles;
+        document.head.appendChild(styleSheet);
+
+        // Variáveis
+        let messageCount = 0;
+        const maxLogMessages = 50;
+
+        // Elementos DOM
+        const brokerUrlInput = document.getElementById("broker-url");
+        const btnConnectHost = document.getElementById("btn-connect-host");
+        const btnConnectSpectator = document.getElementById("btn-connect-spectator");
+        const btnDisconnect = document.getElementById("btn-disconnect");
+        const btnToggleAccessibility = document.getElementById("btn-toggle-accessibility");
+
+        // Status Elements
+        const mqttConnected = document.getElementById("mqtt-connected");
+        const mqttBroker = document.getElementById("mqtt-broker");
+        const mqttClientId = document.getElementById("mqtt-client-id");
+        const accessibilityEnabled = document.getElementById("accessibility-enabled");
+        const accessibilityMessages = document.getElementById("accessibility-messages");
+
+        // Log Elements
+        const mqttLog = document.getElementById("mqtt-log");
+        const accessibilityLog = document.getElementById("accessibility-log");
+
+        // Funções
+        function updateMQTTStatus() {
+            const status = MQTTClient.getStatus();
+            mqttConnected.textContent = status.isConnected ? "✅ Conectado" : "❌ Desconectado";
+            mqttConnected.className = "status-value " + (status.isConnected ? "connected" : "disconnected");
+            mqttBroker.textContent = status.brokerUrl;
+            mqttClientId.textContent = status.clientId;
+        }
+
+        function updateAccessibilityStatus() {
+            const status = Accessibility.getStatus();
+            accessibilityEnabled.textContent = status.enabled ? "✅ Sim" : "❌ Não";
+            accessibilityEnabled.className = "status-value " + (status.enabled ? "connected" : "disconnected");
+            accessibilityMessages.textContent = status.messageCount;
+        }
+
+        function addMQTTLog(message) {
+            messageCount++;
+            if (messageCount === 1) mqttLog.innerHTML = "";
+
+            const item = document.createElement("div");
+            item.className = "event-item";
+            item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            mqttLog.insertBefore(item, mqttLog.firstChild);
+
+            // Limitar a 50 mensagens
+            while (mqttLog.children.length > maxLogMessages) {
+                mqttLog.removeChild(mqttLog.lastChild);
+            }
+        }
+
+        function addAccessibilityLog(message) {
+            const item = document.createElement("div");
+            item.className = "event-item";
+            item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            accessibilityLog.insertBefore(item, accessibilityLog.firstChild);
+
+            while (accessibilityLog.children.length > maxLogMessages) {
+                accessibilityLog.removeChild(accessibilityLog.lastChild);
+            }
+        }
+
+        // Event Listeners
+        btnConnectHost.onclick = () => {
+            const brokerUrl = brokerUrlInput.value || undefined;
+            GameTransmission.initialize(false, brokerUrl);
+            addMQTTLog("✅ Conectado como HOST");
+            setTimeout(updateMQTTStatus, 1000);
+        };
+
+        btnConnectSpectator.onclick = () => {
+            const brokerUrl = brokerUrlInput.value || undefined;
+            GameTransmission.initialize(true, brokerUrl);
+            addMQTTLog("👁️ Conectado como ESPECTADOR");
+            setTimeout(updateMQTTStatus, 1000);
+        };
+
+        btnDisconnect.onclick = () => {
+            MQTTClient.disconnect();
+            addMQTTLog("❌ Desconectado");
+            updateMQTTStatus();
+        };
+
+        btnToggleAccessibility.onclick = () => {
+            Accessibility.toggle();
+            updateAccessibilityStatus();
+            addMQTTLog(Accessibility.enabled ? "🎵 Legendas ATIVADAS" : "🔇 Legendas DESATIVADAS");
+        };
+
+        // Botões de eventos
+        document.getElementById("btn-event-laser").onclick = () => {
+            GameTransmission.publishSoundEvent("laser", {description: "Laser disparado"});
+            addMQTTLog("⚡ Evento: Laser");
+        };
+
+        document.getElementById("btn-event-throw").onclick = () => {
+            GameTransmission.publishSoundEvent("throw", {description: "Arma lançada"});
+            addMQTTLog("💣 Evento: Throw");
+        };
+
+        document.getElementById("btn-event-derez").onclick = () => {
+            GameTransmission.onPlayerDefeated("TestPlayer");
+            addMQTTLog("💥 Evento: Derez");
+        };
+
+        document.getElementById("btn-event-portal").onclick = () => {
+            GameTransmission.onPortalOpened();
+            addMQTTLog("🌀 Evento: Portal");
+        };
+
+        document.getElementById("btn-event-collision").onclick = () => {
+            GameTransmission.onCollision("Player1", "Player2");
+            addMQTTLog("💔 Evento: Colisão");
+        };
+
+        document.getElementById("btn-event-energy-low").onclick = () => {
+            GameTransmission.publishSoundEvent("energy_low", {description: "Energia baixa"});
+            addMQTTLog("⚠️ Evento: Energia Baixa");
+        };
+
+        document.getElementById("btn-event-energy-boost").onclick = () => {
+            GameTransmission.publishSoundEvent("energy_boost", {description: "Energia recuperada"});
+            addMQTTLog("⚡ Evento: Energia Boost");
+        };
+
+        document.getElementById("btn-event-victory").onclick = () => {
+            GameTransmission.onVictory("TestPlayer");
+            addMQTTLog("🏆 Evento: Vitória");
+        };
+
+        document.getElementById("btn-event-game-start").onclick = () => {
+            GameTransmission.onGameStart();
+            addMQTTLog("▶️ Evento: Game Start");
+        };
+
+        document.getElementById("btn-event-game-over").onclick = () => {
+            GameTransmission.onGameOver();
+            addMQTTLog("⏹️ Evento: Game Over");
+        };
+
+        // Atualizar status a cada 1s
+        setInterval(() => {
+            updateMQTTStatus();
+            updateAccessibilityStatus();
+        }, 1000);
+
+        // Inicializar
+        updateMQTTStatus();
+        updateAccessibilityStatus();
+        addMQTTLog("🚀 Teste Page Carregada");
+    </script>
+</body>
+</html>

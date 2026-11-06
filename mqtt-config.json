@@ -1,0 +1,166 @@
+{
+  "mqtt": {
+    "broker": {
+      "url": "wss://mqtt.feira-de-jogos.dev.br/mqtt",
+      "description": "Broker MQTT público padrão"
+    },
+    "topics": {
+      "gameState": "tron/game/state",
+      "soundEvents": "tron/events/sounds",
+      "spectators": "tron/spectators"
+    },
+    "qos": 1,
+    "keepalive": 60,
+    "reconnectInterval": 5000
+  },
+  "accessibility": {
+    "enabled": false,
+    "maxMessages": 5,
+    "messageTimeout": 4000,
+    "languages": ["pt", "en"],
+    "defaultLanguage": "pt",
+    "theme": {
+      "primaryColor": "#4de3ff",
+      "backgroundColor": "rgba(3, 7, 16, 0.95)",
+      "borderColor": "#0f7a99",
+      "textColor": "#ffffff"
+    },
+    "sounds": {
+      "laser": {
+        "pt": "⚡ Disparo de laser",
+        "en": "⚡ Laser fired",
+        "icon": "⚡",
+        "color": "#ff9331"
+      },
+      "throw": {
+        "pt": "💣 Arma lançada",
+        "en": "💣 Weapon thrown",
+        "icon": "💣",
+        "color": "#4de3ff"
+      },
+      "derez": {
+        "pt": "💥 Personagem derrotado",
+        "en": "💥 Character defeated",
+        "icon": "💥",
+        "color": "#ff3b3b"
+      },
+      "portal": {
+        "pt": "🌀 Portal aberto",
+        "en": "🌀 Portal opened",
+        "icon": "🌀",
+        "color": "#9d4edd"
+      },
+      "moto_engine": {
+        "pt": "🏍️ Motor acelerado",
+        "en": "🏍️ Engine accelerated",
+        "icon": "🏍️",
+        "color": "#4de3ff"
+      },
+      "collision": {
+        "pt": "💔 Colisão detectada",
+        "en": "💔 Collision detected",
+        "icon": "💔",
+        "color": "#ff3b3b"
+      },
+      "energy_low": {
+        "pt": "⚠️ Energia baixa",
+        "en": "⚠️ Low energy",
+        "icon": "⚠️",
+        "color": "#ff9331"
+      },
+      "energy_boost": {
+        "pt": "⚡ Energia recuperada",
+        "en": "⚡ Energy restored",
+        "icon": "⚡",
+        "color": "#4de3ff"
+      },
+      "victory": {
+        "pt": "🏆 Vitória!",
+        "en": "🏆 Victory!",
+        "icon": "🏆",
+        "color": "#3bff5b"
+      },
+      "game_start": {
+        "pt": "▶️ Jogo iniciado",
+        "en": "▶️ Game started",
+        "icon": "▶️",
+        "color": "#4de3ff"
+      },
+      "game_over": {
+        "pt": "⏹️ Jogo finalizado",
+        "en": "⏹️ Game over",
+        "icon": "⏹️",
+        "color": "#ff3b3b"
+      },
+      "player_action": {
+        "pt": "👤 Ação do jogador",
+        "en": "👤 Player action",
+        "icon": "👤",
+        "color": "#4de3ff"
+      }
+    }
+  },
+  "transmission": {
+    "updateInterval": 50,
+    "enableAutoSync": true,
+    "logEvents": false
+  },
+  "performance": {
+    "maxConcurrentConnections": 100,
+    "messageBufferSize": 1000,
+    "gcInterval": 30000
+  },
+  "ui": {
+    "showDebugInfo": false,
+    "animationDuration": 300,
+    "responsiveBreakpoint": 768
+  },
+  "brokers": {
+    "public": [
+      {
+        "name": "Eclipse Mosquitto (Recomendado)",
+        "url": "ws://mqtt.eclipseprojects.io:9001",
+        "type": "public",
+        "description": "Broker MQTT público estável e confiável"
+      },
+      {
+        "name": "HiveMQ",
+        "url": "wss://broker.hivemq.com:8884",
+        "type": "public",
+        "description": "MQTT 5.0 broker gerenciado"
+      },
+      {
+        "name": "EMQX Online",
+        "url": "wss://broker.emqx.io:8883",
+        "type": "public",
+        "description": "MQTT broker em nuvem de alta performance"
+      }
+    ],
+    "local": [
+      {
+        "name": "Mosquitto Local",
+        "url": "wss://localhost:9001",
+        "type": "local",
+        "description": "Para desenvolvimento local com Docker"
+      },
+      {
+        "name": "EMQX Local",
+        "url": "wss://localhost:8084",
+        "type": "local",
+        "description": "EMQX rodando localmente com Docker"
+      }
+    ],
+    "custom": {
+      "url": "wss://seu-broker.com:8883",
+      "type": "custom",
+      "description": "Substitua pela URL do seu broker privado"
+    }
+  },
+  "documentation": {
+    "quickStart": "QUICK-START.md",
+    "fullGuide": "MQTT-ACCESSIBILITY-README.md",
+    "implementation": "IMPLEMENTATION-SUMMARY.md"
+  },
+  "version": "1.0.0",
+  "lastUpdated": "2024-11-06"
+}

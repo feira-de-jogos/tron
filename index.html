@@ -5549,5 +5549,54 @@
       Interface.inicializar();
       Interface.configurarBotoes(iniciarNovoJogo, iniciarNovoJogo);
     </script>
+
+    <!-- Scripts de suporte a MQTT e Acessibilidade -->
+    <script src="mqtt-client.js"></script>
+    <script src="accessibility.js"></script>
+    <script src="transmission.js"></script>
+    <script src="integration-example.js"></script>
+    <script src="test-suite.js"></script>
+
+    <script>
+      /* ==================== INTEGRAÇÃO DE TRANSMISSÃO E ACESSIBILIDADE ==================== */
+
+      // Injetar estilos de acessibilidade
+      const styleSheet = document.createElement("style");
+      styleSheet.textContent = accessibilityStyles;
+      document.head.appendChild(styleSheet);
+
+      // Hook: Quando o jogo inicia
+      const originalIniciarNovoJogo = iniciarNovoJogo;
+      iniciarNovoJogo = function() {
+        if (GameTransmission.enabled && GameTransmission.isHost) {
+          GameTransmission.onGameStart();
+        }
+        originalIniciarNovoJogo.apply(this, arguments);
+      };
+
+      // Expor funções globais para ativar/desativar acessibilidade via console
+      window.toggleAccessibility = function() {
+        Accessibility.toggle();
+        console.log("Acessibilidade:", Accessibility.getStatus());
+      };
+
+      // Expor função para conectar modo espectador via console
+      window.connectAsSpectator = function(brokerUrl) {
+        GameTransmission.initialize(true, brokerUrl);
+        console.log("Conectado como espectador");
+      };
+
+      // Expor função para conectar como host via console
+      window.connectAsHost = function(brokerUrl) {
+        GameTransmission.initialize(false, brokerUrl);
+        console.log("Conectado como host transmissor");
+      };
+
+      console.log("%c🎮 TRON - MQTT & Acessibilidade Carregado", "color: #4de3ff; font-size: 14px; font-weight: bold;");
+      console.log("Use: toggleAccessibility() para ativar legendas");
+      console.log("Use: connectAsHost() para transmitir partida");
+      console.log("Use: connectAsSpectator() para assistir com legendas");
+      console.log("Use: TestSuite.interactive() para ver testes disponíveis");
+    </script>
   </body>
 </html>
