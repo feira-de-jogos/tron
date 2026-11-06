@@ -8,10 +8,12 @@ Este módulo adiciona suporte completo para transmissão de estado de partida vi
 
 ### 🌐 MQTT WebSocket
 - **Transmissão em Tempo Real**: Sincroniza o estado da partida entre host e espectadores
-- **Broker Flexível**: Suporta qualquer broker MQTT com WebSocket
-- **Fallback WebSocket**: Funciona mesmo sem biblioteca Paho MQTT
+- **Broker Flexível**: Suporta qualquer broker MQTT com suporte a WebSocket
+- **MQTT sobre WebSocket**: Protocolo MQTT transportado via WebSocket (não WebSocket puro)
+- **Paho MQTT**: Biblioteca responsável pela tradução do protocolo MQTT
 - **QoS Configurável**: Entrega confiável de mensagens
 - **Pub/Sub Robusto**: Tópicos organizados por tipo de evento
+- **Reconexão Automática**: Reconnect com backoff exponencial
 
 ### ♿ Acessibilidade para Surdos
 - **Legendas de Eventos**: Converte sons em texto em tempo real

@@ -52,10 +52,11 @@ toggleAccessibility()
 ## ✨ Funcionalidades
 
 ### 🌐 MQTT WebSocket
-- Cliente MQTT completo
+- Cliente MQTT completo usando Paho MQTT
 - Broker público padrão (sem configuração)
 - Suporte a brokers customizados
-- Fallback para WebSocket puro (zero dependências)
+- MQTT sobre WebSocket (protocolo MQTT via transporte WebSocket)
+- Reconexão automática com backoff exponencial
 - QoS 1 (entrega garantida)
 - Tópicos: `tron/game/state`, `tron/events/sounds`, `tron/spectators`
 

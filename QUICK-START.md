@@ -1,5 +1,27 @@
 # Guia Rápido de Iniciação - MQTT & Acessibilidade TRON
 
+## 🔧 Pré-requisitos
+
+- **Navegador moderno** com suporte a WebSocket e JavaScript
+- **Biblioteca Paho MQTT** (já carregada automaticamente no index.html via CDN)
+- **Broker MQTT com suporte a WebSocket** (exemplos abaixo)
+
+### Brokers Disponíveis
+
+| Broker | URL | Tipo | Descrição |
+|--------|-----|------|-----------|
+| **Eclipse Mosquitto** ⭐ | `ws://mqtt.eclipseprojects.io:9001` | Público | Recomendado - MQTT sobre WebSocket |
+| **HiveMQ** | `wss://broker.hivemq.com:8884` | Público | MQTT 5.0 seguro |
+| **EMQX** | `wss://broker.emqx.io:8883` | Público | Alta performance |
+| **Local (Docker)** | `ws://localhost:9001` | Local | Para desenvolvimento |
+
+### ⚠️ Importante: MQTT sobre WebSocket vs WebSocket Puro
+
+- **O servidor WebSocket NÃO usa WebSocket puro**
+- **Usa MQTT sobre WebSocket** (protocolo MQTT transportado via WebSocket)
+- A biblioteca Paho MQTT é responsável por traduzir entre JavaScript e o protocolo MQTT
+- Brokers devem ser configurados com suporte a MQTT sobre WebSocket
+
 ## 🚀 Quick Start (30 segundos)
 
 ### Cenário 1: Jogar com Legendas (Acessibilidade para Surdos)

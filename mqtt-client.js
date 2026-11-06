@@ -1,6 +1,9 @@
 /**
- * Cliente MQTT WebSocket para transmissão de estado do jogo
+ * Cliente MQTT sobre WebSocket para transmissão de estado do jogo
  * Suporta múltiplos espectadores sincronizados
+ * 
+ * NOTA: Requer broker com suporte a MQTT sobre WebSocket (não WebSocket puro)
+ * Exemplos: Eclipse Mosquitto, HiveMQ, EMQX
  */
 
 const MQTTClient = {
@@ -11,10 +14,13 @@ const MQTTClient = {
   gameTopic: "tron/game/state",
   spectatorsTopic: "tron/spectators",
   soundEventsTopic: "tron/events/sounds",
+  reconnectInterval: 5000,
+  reconnectAttempts: 0,
+  maxReconnectAttempts: 10,
   
   /**
-   * Inicializa a conexão MQTT
-   * @param {string} brokerUrl - URL do broker MQTT WebSocket
+   * Inicializa a conexão MQTT sobre WebSocket
+   * @param {string} brokerUrl - URL do broker MQTT WebSocket (ws:// ou wss://)
    * @param {function} onConnect - Callback ao conectar
    * @param {function} onDisconnect - Callback ao desconectar
    */
@@ -23,91 +29,128 @@ const MQTTClient = {
     
     this.onConnect = onConnect;
     this.onDisconnect = onDisconnect;
+    this.reconnectAttempts = 0;
     
-    // Usar biblioteca paho-mqtt se disponível, caso contrário usar fallback WebSocket
+    // Usar biblioteca paho-mqtt se disponível
     if (typeof Paho !== "undefined") {
       this._initPaho();
     } else {
-      this._initWebSocketFallback();
+      console.error("[MQTT] Biblioteca Paho MQTT não encontrada!");
+      console.error("[MQTT] Por favor, inclua a biblioteca Paho MQTT no HTML:");
+      console.error("[MQTT] <script src='https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'></script>");
+      this._handleConnectionError("Biblioteca Paho MQTT não encontrada");
     }
   },
   
   /**
-   * Inicializa com cliente Paho MQTT
+   * Inicializa com cliente Paho MQTT sobre WebSocket
    */
   _initPaho() {
     try {
-      this.client = new Paho.MQTT.Client(
-        this.brokerUrl.replace("ws://", "").replace("wss://", ""),
-        9001,
-        this.clientId
-      );
+      // Extrair host e porta da URL
+      let host = this.brokerUrl.replace("ws://", "").replace("wss://", "");
+      let port = 9001; // Porta padrão
       
+      // Se houver porta na URL, extrair
+      if (host.includes(":")) {
+        const parts = host.split(":");
+        host = parts[0];
+        port = parseInt(parts[1]);
+      }
+      
+      // Criar cliente Paho MQTT
+      this.client = new Paho.MQTT.Client(host, port, this.clientId);
+      
+      // Callbacks de conexão/desconexão
       this.client.onConnectionLost = (error) => {
-        console.warn("[MQTT] Conexão perdida:", error);
+        console.warn("[MQTT] Conexão perdida:", error.errorMessage || error);
         this.isConnected = false;
-        if (this.onDisconnect) this.onDisconnect(error);
+        
+        if (this.onDisconnect) {
+          this.onDisconnect(error);
+        }
+        
+        // Tentar reconectar
+        this._attemptReconnect();
       };
       
+      // Callback para mensagens recebidas
       this.client.onMessageArrived = (message) => {
         this._handleMessage(message.destinationName, message.payloadString);
       };
       
+      // Opções de conexão
       const options = {
         onSuccess: () => {
-          console.log("[MQTT] Conectado ao broker");
+          console.log("[MQTT] ✅ Conectado ao broker MQTT");
+          console.log("[MQTT] Host:", this.brokerUrl);
+          console.log("[MQTT] Client ID:", this.clientId);
+          
           this.isConnected = true;
+          this.reconnectAttempts = 0; // Reset de tentativas
+          
+          // Inscrever nos tópicos
           this._subscribeTopics();
-          if (this.onConnect) this.onConnect();
+          
+          if (this.onConnect) {
+            this.onConnect();
+          }
         },
+        
         onFailure: (error) => {
-          console.error("[MQTT] Falha na conexão:", error);
+          console.error("[MQTT] ❌ Falha na conexão:", error.errorMessage || error);
           this.isConnected = false;
+          this._attemptReconnect();
         },
+        
         useSSL: this.brokerUrl.startsWith("wss"),
-        cleanSession: true
+        cleanSession: true,
+        reconnect: true,
+        keepAliveInterval: 30
       };
       
+      // Conectar ao broker
       this.client.connect(options);
+      
     } catch (e) {
-      console.error("[MQTT] Erro ao inicializar Paho:", e);
-      this._initWebSocketFallback();
+      console.error("[MQTT] ❌ Erro ao inicializar Paho:", e);
+      this._handleConnectionError(e);
     }
   },
   
   /**
-   * Inicializa com fallback WebSocket simples
+   * Tenta reconectar ao broker
    */
-  _initWebSocketFallback() {
-    console.log("[MQTT] Usando fallback WebSocket");
-    try {
-      this.ws = new WebSocket(this.brokerUrl);
-      this.ws.onopen = () => {
-        console.log("[MQTT] WebSocket conectado");
-        this.isConnected = true;
-        if (this.onConnect) this.onConnect();
-      };
+  _attemptReconnect() {
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      const delay = this.reconnectInterval * this.reconnectAttempts;
       
-      this.ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          this._handleMessage(data.topic, JSON.stringify(data.payload));
-        } catch (e) {
-          console.error("[MQTT] Erro ao parsear mensagem:", e);
-        }
-      };
+      console.warn(
+        `[MQTT] Tentando reconectar em ${delay}ms... (tentativa ${this.reconnectAttempts}/${this.maxReconnectAttempts})`
+      );
       
-      this.ws.onerror = (error) => {
-        console.error("[MQTT] WebSocket erro:", error);
-      };
-      
-      this.ws.onclose = () => {
-        console.log("[MQTT] WebSocket desconectado");
-        this.isConnected = false;
-        if (this.onDisconnect) this.onDisconnect();
-      };
-    } catch (e) {
-      console.error("[MQTT] Erro ao inicializar WebSocket:", e);
+      setTimeout(() => {
+        this.initialize(null, this.onConnect, this.onDisconnect);
+      }, delay);
+    } else {
+      console.error("[MQTT] ❌ Máximo de tentativas de reconexão atingido");
+      this._handleConnectionError("Máximo de reconexões atingido");
+    }
+  },
+  
+  /**
+   * Trata erros de conexão
+   */
+  _handleConnectionError(error) {
+    console.error("[MQTT] ❌ Erro fatal de conexão:", error);
+    console.error("[MQTT] Verifique:");
+    console.error("[MQTT]  1. URL do broker está correta?");
+    console.error("[MQTT]  2. Broker aceita MQTT sobre WebSocket?");
+    console.error("[MQTT]  3. Biblioteca Paho MQTT está carregada?");
+    
+    if (this.onDisconnect) {
+      this.onDisconnect({errorMessage: error});
     }
   },
   
@@ -116,15 +159,18 @@ const MQTTClient = {
    */
   _subscribeTopics() {
     if (this.client && this.client.subscribe) {
-      this.client.subscribe(this.gameTopic);
-      this.client.subscribe(this.soundEventsTopic);
-      this.client.subscribe(this.spectatorsTopic);
-    } else if (this.ws) {
-      // Enviar mensagem de inscrição via WebSocket
-      this.ws.send(JSON.stringify({
-        action: "subscribe",
-        topics: [this.gameTopic, this.soundEventsTopic, this.spectatorsTopic]
-      }));
+      try {
+        this.client.subscribe(this.gameTopic);
+        this.client.subscribe(this.soundEventsTopic);
+        this.client.subscribe(this.spectatorsTopic);
+        
+        console.log("[MQTT] ✅ Inscrito nos tópicos:");
+        console.log(`       - ${this.gameTopic}`);
+        console.log(`       - ${this.soundEventsTopic}`);
+        console.log(`       - ${this.spectatorsTopic}`);
+      } catch (e) {
+        console.error("[MQTT] ❌ Erro ao inscrever nos tópicos:", e);
+      }
     }
   },
   
@@ -226,28 +272,30 @@ const MQTTClient = {
   },
   
   /**
-   * Publica mensagem no tópico
+   * Publica mensagem no tópico MQTT
    */
   _publish(topic, data) {
+    if (!this.isConnected) {
+      console.warn("[MQTT] ❌ Não conectado ao broker - mensagem não publicada");
+      return;
+    }
+    
     const payload = JSON.stringify(data);
     
-    if (this.client && this.client.publish) {
-      try {
-        this.client.publish(
-          topic,
-          payload,
-          1, // QoS
-          false // retain
-        );
-      } catch (e) {
-        console.error("[MQTT] Erro ao publicar:", e);
+    try {
+      if (this.client && this.client.publish) {
+        const message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        message.qos = 1; // QoS 1: at least once delivery
+        message.retained = false;
+        
+        this.client.publish(message);
+        console.log(`[MQTT] ✓ Publicado em ${topic}`);
+      } else {
+        console.error("[MQTT] ❌ Cliente MQTT não disponível para publicação");
       }
-    } else if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify({
-        action: "publish",
-        topic: topic,
-        payload: data
-      }));
+    } catch (e) {
+      console.error("[MQTT] ❌ Erro ao publicar:", e);
     }
   },
   

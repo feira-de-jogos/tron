@@ -121,40 +121,50 @@
         "name": "Eclipse Mosquitto (Recomendado)",
         "url": "ws://mqtt.eclipseprojects.io:9001",
         "type": "public",
-        "description": "Broker MQTT público estável e confiável"
+        "description": "Broker MQTT público com suporte a WebSocket",
+        "protocol": "MQTT sobre WebSocket"
       },
       {
         "name": "HiveMQ",
         "url": "wss://broker.hivemq.com:8884",
         "type": "public",
-        "description": "MQTT 5.0 broker gerenciado"
+        "description": "MQTT 5.0 broker gerenciado com WebSocket",
+        "protocol": "MQTT sobre WebSocket (seguro)"
       },
       {
         "name": "EMQX Online",
         "url": "wss://broker.emqx.io:8883",
         "type": "public",
-        "description": "MQTT broker em nuvem de alta performance"
+        "description": "MQTT broker em nuvem de alta performance",
+        "protocol": "MQTT sobre WebSocket (seguro)"
       }
     ],
     "local": [
       {
         "name": "Mosquitto Local",
-        "url": "wss://localhost:9001",
+        "url": "ws://localhost:9001",
         "type": "local",
-        "description": "Para desenvolvimento local com Docker"
+        "description": "Para desenvolvimento local com Docker",
+        "setup": "docker run -d --name mosquitto -p 9001:9001 eclipse-mosquitto"
       },
       {
         "name": "EMQX Local",
-        "url": "wss://localhost:8084",
+        "url": "ws://localhost:8083",
         "type": "local",
-        "description": "EMQX rodando localmente com Docker"
+        "description": "EMQX rodando localmente com Docker",
+        "setup": "docker run -d -p 8083:8083 -p 1883:1883 emqx/emqx"
       }
     ],
     "custom": {
-      "url": "wss://mqtt.feira-de-jogos.dev.br/mqtt",
+      "url": "ws://seu-broker.com:9001",
       "type": "custom",
-      "description": "Substitua pela URL do seu broker privado"
+      "description": "Substitua pela URL do seu broker MQTT com suporte a WebSocket"
     }
+  },
+  "requirements": {
+    "protocol": "MQTT sobre WebSocket (ws:// ou wss://)",
+    "library": "Paho MQTT JavaScript",
+    "note": "O broker deve aceitar MQTT sobre WebSocket, não WebSocket puro. A biblioteca Paho MQTT é responsável pela tradução do protocolo MQTT."
   },
   "documentation": {
     "quickStart": "QUICK-START.md",

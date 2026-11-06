@@ -4,9 +4,10 @@
 
 ### 1. **Sistema de Transmissão MQTT WebSocket**
    - Cliente MQTT completo com suporte a WebSocket
-   - Fallback para WebSocket puro sem dependências
+   - Usa biblioteca Paho MQTT para protocolo MQTT sobre WebSocket
    - Tópicos organizados por tipo de evento
    - QoS configurável e entrega confiável
+   - Reconexão automática com backoff exponencial
 
 ### 2. **Módulo de Acessibilidade para Surdos**
    - Conversão de sons em texto em tempo real
@@ -38,9 +39,9 @@
 
 ### Módulos Principais
 - **`mqtt-client.js`** (6.8 KB)
-  - Cliente MQTT WebSocket
-  - Métodos para pub/sub
-  - Fallback automático
+  - Cliente MQTT WebSocket usando Paho MQTT
+  - Métodos para pub/sub de tópicos MQTT
+  - Reconexão com backoff exponencial
 
 - **`accessibility.js`** (11 KB)
   - Sistema de legendas
@@ -322,15 +323,12 @@ O sistema foi projetado para **não quebrar** nada:
 
 ## 📦 Dependências
 
-**Nenhuma!** 🎉
-
-O sistema funciona com:
+**Dependências:**
+- ✅ Biblioteca Paho MQTT (carregada automaticamente via CDN em index.html)
 - ✅ JavaScript puro (ES6+)
-- ✅ Web APIs nativas
-- ✅ MQTT via WebSocket (nativo)
+- ✅ Web APIs nativas (WebSocket)
 
-Opcional:
-- 📌 Biblioteca Paho MQTT (se disponível, usa fallback)
+Sem dependências NPM ou bloat adicional!
 
 ## 🎉 Conclusão
 
